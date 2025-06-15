@@ -1,0 +1,134 @@
+openapi: 3.0.0
+
+info:
+  title: Project - Name 
+
+  description: an Api for the Project - Name
+
+  contact: {}
+
+  version: '1.0'
+
+servers:
+  - url: http://localhost:3000/api/v1
+
+    variables: {}
+
+paths:
+  /entries:
+    get:
+      tags:
+        - Entry
+
+      summary: GetAllEntries
+
+      operationId: GetAllEntries
+
+      parameters: []
+
+      responses:
+        '200':
+          description: ''
+
+          headers: {}
+
+      deprecated: false
+
+    post:
+      tags:
+        - Entry
+
+      summary: CreateEntry
+
+      operationId: CreateEntry
+
+      parameters: []
+
+      responses:
+        '200':
+          description: ''
+
+          headers: {}
+
+      deprecated: false
+
+  /entries/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The user ID
+    put:
+      tags:
+        - Entry
+
+      summary: UpdateEntry
+
+      operationId: UpdateEntry
+
+      parameters: []
+
+      responses:
+        '200':
+          description: ''
+
+          headers: {}
+
+      deprecated: false
+
+    get:
+      tags:
+        - Entry
+
+      summary: GetSingleEntry
+
+      operationId: GetSingleEntry
+
+      parameters: []
+
+      responses:
+        '200':
+          description: ''
+
+          headers: {}
+
+      deprecated: false
+
+    delete:
+      tags:
+        - Entry
+
+      summary: DeleteEntry
+
+      operationId: DeleteEntry
+
+      parameters: []
+
+      responses:
+        '200':
+          description: ''
+
+          headers: {}
+
+      deprecated: false
+
+components:
+  securitySchemes:
+    httpBearer:
+      type: http
+
+      scheme: bearer
+
+security:
+  - httpBearer: []
+
+tags:
+  - name: Misc
+
+    description: ''
+
+  - name: Entry
+
+    description: ''
