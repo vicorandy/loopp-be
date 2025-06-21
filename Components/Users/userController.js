@@ -7,14 +7,18 @@ const {
 } = require('../../Utils/stringValidator');
 const User = require('./userModel');
 
+
 // FOR CREATING A USER ACCOUNT
-// ////////////////////////////////////////////////////////////////////////////
+
 async function signUp(req, res) {
   try {
-    const { firstname, lastname, email, password } = req.body;
-
+    const { firstName, lastName, email, password, userRole ,projectMangerSecret } = req.body;
+    
+  
     const isEmailCorrect = emailValidator(email);
     const isPasswordCorrect = passwordValidator(password);
+    const allowedRoles = ['project-owner', 'project-manager', 'project-engineer'];
+
 
     // validating user password
     if (!isEmailCorrect) {
@@ -35,6 +39,20 @@ async function signUp(req, res) {
       return;
     }
 
+    if(!userRole){
+      return res.status(400).json({message:'please select a user role'})
+    }
+     console.log(userRole,userRole.includes(allowedRoles),allowedRoles)
+    if(!allowedRoles.includes(userRole)){
+      return res.status(400).json({message:'please enter a valid user role'})
+    }
+
+    if(userRole === 'project-manager'){
+      if(projectMangerSecret !== process.env.PROJECT_MANAGER_SECRET){
+         return res.status(400).json({message:'Invalid request Please see the Admin'})
+      }
+    }
+
     // checking if user already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
@@ -47,16 +65,18 @@ async function signUp(req, res) {
     }
 
     const user = await User.create({
-      firstname,
-      lastname,
+      firstName,
+      lastName,
       email,
       password,
+      userRole
     });
 
     const token = user.createJWT({
       userid: user.id,
-      username: user.firstname,
+      username: user.firstName,
       useremail: user.email,
+      userRole : user.userRole
     });
 
     // deleting hashed password
@@ -76,15 +96,16 @@ async function signUp(req, res) {
           'This email address has already been registered to an account.',
       });
     } else {
+      console.error(error)
       res.status(500);
       res.json({ message: 'something went wrong' });
     }
   }
 }
-// ////////////////////////////////////////////////////////////////////////////
+
 
 // FOR LOGGING INTO A USER ACCOUNT
-// ////////////////////////////////////////////////////////////////////////////
+
 async function signIn(req, res) {
   try {
     // checking if all credentials are provided
@@ -116,7 +137,7 @@ async function signIn(req, res) {
     // creating jsonwebtoken
     const token = user.createJWT({
       userid: user.id,
-      username: user.firstname,
+      username: user.firstName,
       useremail: user.email,
     });
 

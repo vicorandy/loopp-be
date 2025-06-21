@@ -3,6 +3,7 @@ require('dotenv').config();
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const express = require('express');
+const cors = require('cors')
 const usersRouter = require('./Components/Users/userRoutes');
 const serviceRouter = require('./Components/Services/serviceRoutes')
 const notFoundError = require('./MiddelWare/notFound');
@@ -10,6 +11,15 @@ const notFoundError = require('./MiddelWare/notFound');
 // const { USERS_URI } = process.env;
 
 const app = express();
+
+
+//cors set up
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with your frontend domain in production
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // Allow cookies or HTTP auth
+  }));
 
 // request body paser
 app.use(express.json({limit:"10mb"}));

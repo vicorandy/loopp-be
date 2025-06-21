@@ -13,13 +13,13 @@ const User = db.define(
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true
     },
-    firstname: {
+    firstName: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    lastname: {
+    lastName: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     email: {
       type: Sequelize.STRING,
@@ -27,10 +27,16 @@ const User = db.define(
       unique: true,
     },
 
+    userRole : {
+      type: Sequelize.ENUM('project-owner','project-manager','project-engineer'),
+      allowNull : false
+    },
+
     password: {
       type: Sequelize.STRING,
       allowNull: false,
     },
+
   },
   {
     timestamps: false,
@@ -52,7 +58,7 @@ User.prototype.comparePassword = async (password, hash) => {
 
 // Creating json web token
 User.prototype.createJWT = (user) => {
-  const token = jwt.sign(user, process.env.JWT_SECRETE, {
+  const token = jwt.sign(user, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_lLIFETIME,
   });
   return token;
@@ -77,4 +83,7 @@ User.prototype.hashPassword = async (password) => {
   const hash = await bcrypt.hash(password, salt);
   return hash;
 };
+
+db.sync().then(()=>console.log('user table created'))
+
 module.exports = User;

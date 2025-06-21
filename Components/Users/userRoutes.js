@@ -8,8 +8,8 @@ const {
 const userRouter = express.Router();
 
 
-userRouter.route('/signup').post(signUp);
-userRouter.route('/signin').post(signIn);
+userRouter.route('/sign-up').post(signUp);
+userRouter.route('/sign-in').post(signIn);
 
 
 module.exports = userRouter;

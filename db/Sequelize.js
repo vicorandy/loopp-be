@@ -12,7 +12,7 @@ const db = new Sequelize(DATABASE,USER,PASSWORD, {
     acquire: 30000,
     idle: 10000,
   },
-logginf:false
+logging:false
 });
 
 // testing db connection

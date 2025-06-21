@@ -12,9 +12,9 @@ async function authorization(req, res, next) {
     }
     const token = authHeader.split(' ')[1];
     //  verifying user token
-    const payLoad = jwt.verify(token, process.env.JWT_SECRETE);
-    const { userid, username } = payLoad;
-    const user = { userid, username };
+    const payLoad = jwt.verify(token, process.env.JWT_SECRET);
+    const { userid, userName ,userRole } = payLoad;
+    const user = { userid, userName ,userRole };
 
     // creating user object
     req.user = user;
