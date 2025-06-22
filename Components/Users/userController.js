@@ -6,6 +6,7 @@ const {
   emailValidator,
 } = require('../../Utils/stringValidator');
 const User = require('./userModel');
+const { get } = require('./userRoutes');
 
 
 // FOR CREATING A USER ACCOUNT
@@ -74,8 +75,8 @@ async function signUp(req, res) {
 
     const token = user.createJWT({
       userid: user.id,
-      username: user.firstName,
-      useremail: user.email,
+      userName: user.firstName,
+      userEmail: user.email,
       userRole : user.userRole
     });
 
@@ -137,8 +138,8 @@ async function signIn(req, res) {
     // creating jsonwebtoken
     const token = user.createJWT({
       userid: user.id,
-      username: user.firstName,
-      useremail: user.email,
+      userName: user.firstName,
+      userEmail: user.email,
     });
 
     // deleting hashed password
@@ -152,14 +153,25 @@ async function signIn(req, res) {
     res.json({ message: 'Something went wrong' });
   }
 }
-// ////////////////////////////////////////////////////////////////////////////
 
 // FOR RETRIEVING USE INFO
-// ////////////////////////////////////////////////////////////////////////////
+async function getUserInfo(req, res) {
+  try {
+    const { userid } = req.user;
 
+    const user = await User.findOne({ where: { id: userid } });
+
+    delete user.dataValues.password
+
+    return res.status(200).json({ message: "your request was successful", user });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+}
 
 
 module.exports={
   signUp,
-  signIn
+  signIn,
+  getUserInfo
 }
