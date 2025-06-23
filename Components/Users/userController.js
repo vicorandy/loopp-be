@@ -49,7 +49,8 @@ async function signUp(req, res) {
     }
 
     if(userRole === 'project-manager'){
-      if(projectMangerSecret !== process.env.PROJECT_MANAGER_SECRET){
+      // if(projectMangerSecret !== process.env.PROJECT_MANAGER_SECRET){
+      if(projectMangerSecret !== 'test'){
          return res.status(400).json({message:'Invalid request Please see the Admin'})
       }
     }

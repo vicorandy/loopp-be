@@ -90,7 +90,12 @@ async function createService(req, res) {
 // GET ALL SERVICES
 async function getAllServices(req, res) {
   try {
-    const services = await Service.findAll();
+    const {page=1,limit=12} = req.params
+    const offset = (page - 1) * 0
+    const services = await Service.findAll({
+      offset,
+      limit
+    });
     res.json({ message:'Services fetched successfully',services });
   } catch (err) {
     console.error(err);
