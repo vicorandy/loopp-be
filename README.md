@@ -1,19 +1,19 @@
-# DIARY-APP API <a href='https://coveralls.io/github/vicorandy/diary-app?branch=orm_feature'><img src='https://coveralls.io/repos/github/vicorandy/diary-app/badge.svg?branch=orm_feature' alt='Coverage Status' /></a>
+# AI-MARKETPLACE API <a href='https://coveralls.io/github/GPIT-Nigeria/backend-loopp?branch=main'><img src='https://coveralls.io/repos/github/GPIT-Nigeria/backend-loopp/badge.svg?branch=main' alt='Coverage Status' /></a>
 
-## _An API for fetching and editing daily diary logs from users_
+## _An API powering a marketplace where project managers connect with AI engineers for project collaboration_
 
 ## Features
 
-- [x] users can post new diary entry.
-- [x] users can serch for specific diary entry.
-- [x] Users can edit specific diary entry.
-- [x] Users can fetch all diary entries.
+- [x] Project managers can sign up and log in.
+- [x] Project managers are authorized using JWT tokens.
+- [x] Project managers can upload service/project requests.
+- [x] Users can fetch available services.
 
 ## API DOCUMENTATION
 
-> The API allowers user to log entries daily to the app, user can also edit a previuos logged entries and also fetch specific entries stored in thr data base.
+> The API allows project managers to register, log in, and post service requests for AI engineers. It also enables fetching all available services posted. Authentication is handled using JWT tokens. More features like AI engineer onboarding, messaging, and bidding will be added.
 
-Pivotal tracker was used as management tool for this project.
+Pivotal Tracker or equivalent tool is used to manage the project tasks.
 [https://www.pivotaltracker.com/n/projects/2597332]
 
 ## Getting Started
@@ -23,15 +23,9 @@ Pivotal tracker was used as management tool for this project.
 In order to install and run this project locally, you would need to install the following packages on your local machine.
 
 - Node JS
-- postgre SQL
+- PostgreSQL
 
 ### Installation
 
 - Clone this repository
 
-```
-git clone [https://github.com/vicorandy/diary-app.git]
-```
-
-- Navigate to the project directory
-- Run `npm install` or `yarn` to install the project dependencies
