@@ -7,10 +7,13 @@ const {
     updateService,
     deleteService,
   } = require('./serviceController')
+  const authorization = require('../../MiddelWare/auth')
 
 
 const serviceRouter = express.Router()
-serviceRouter.route('/add-service').post(upload.single('file'),createService)
+serviceRouter.route('/add-service').post(upload.single('file'),authorization,createService)
+serviceRouter.route('/edit-service/:id').post(upload.single('file'),authorization,updateService)
+serviceRouter.route('/delete-service/:id').delete(authorization,deleteService)
 serviceRouter.route('/get-services').get(getAllServices)
 
 

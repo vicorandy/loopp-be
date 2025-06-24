@@ -5,6 +5,11 @@ const cloudinary = require('../../config/cloudinary');
 // CREATE
 async function createService(req, res) {
   try {
+
+    if(req.user.userRole !== 'project-manager'){
+      return res.status(401).json({message:'you are not allowed to access this resource'})
+    }
+
     const { name, category, description, verified = false, pro = false } = req.body;
     
     // Validate required fields
@@ -106,6 +111,7 @@ async function getAllServices(req, res) {
 // READ ONE
 async function getServiceById(req, res) {
   try {
+    
     const { id } = req.params;
     const service = await Service.findByPk(id);
     if (!service) return res.status(404).json({ message: 'Service not found' });
@@ -119,19 +125,46 @@ async function getServiceById(req, res) {
 // UPDATE
 async function updateService(req, res) {
   try {
+     if(req.user.userRole !== 'project-manager'){
+      return res.status(401).json({message:'you are not allowed to access this resource'})
+    }
     const { id } = req.params;
     const { name, category, description, verified, pro } = req.body;
+    console.log({ name, category, description, verified, pro })
     const service = await Service.findByPk(id);
     if (!service) return res.status(404).json({ message: 'Service not found' });
 
     // If new image uploaded, replace on Cloudinary
-    if (req.file) {
-      // (optional) delete old image via cloudinary.uploader.destroy(service.public_id)
-      const uploadResult = await cloudinary.uploader.upload_stream(
-        { folder: 'services' },
-        (error, result) => { if (error) throw error; return result; }
-      ).end(req.file.buffer);
-      service.image = uploadResult.secure_url;
+    
+      if (req.file) {
+      try {
+        const uploadPromise = new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { 
+              folder: 'services',
+              resource_type: 'auto', // Automatically detect file type
+              transformation: [
+                { width: 800, height: 600, crop: 'limit' }, // Optimize image size
+                { quality: 'auto' }
+              ]
+            },
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result);
+            }
+          );
+          stream.end(req.file.buffer);
+        });
+     
+        const uploadResult = await uploadPromise;
+        service.image = uploadResult.secure_url;
+        
+      } catch (uploadError) {
+        return res.status(500).json({ 
+          message: 'Error uploading image to Cloudinary',
+          error: uploadError.message 
+        });
+      }
     }
 
     service.name        = name        ?? service.name;
@@ -151,6 +184,9 @@ async function updateService(req, res) {
 // DELETE
 async function deleteService(req, res) {
   try {
+    if(req.user.userRole !== 'project-manager'){
+      return res.status(401).json({message:'you are not allowed to access this resource'})
+    }
     const { id } = req.params;
     const service = await Service.findByPk(id);
     if (!service) return res.status(404).json({ message: 'Service not found' });
