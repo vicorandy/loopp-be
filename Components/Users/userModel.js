@@ -13,14 +13,17 @@ const User = db.define(
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true
     },
+
     firstName: {
       type: Sequelize.STRING,
       allowNull: true,
     },
+
     lastName: {
       type: Sequelize.STRING,
       allowNull: true,
     },
+
     email: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -36,6 +39,21 @@ const User = db.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
+
+    yearsOfExperience: {
+      type: Sequelize.DOUBLE,
+      allowNull:true,
+    },
+
+    openToRemoteWork: {
+      type: Sequelize.BOOLEAN,
+      allowNull: true
+    },
+
+    phoneNumber: {
+      type: Sequelize.STRING,
+      allowNull:true,
+    }
 
   },
   {

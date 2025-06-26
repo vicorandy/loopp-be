@@ -7,13 +7,14 @@ const {
 } = require('../../Utils/stringValidator');
 const User = require('./userModel');
 const { get } = require('./userRoutes');
+const { where } = require('sequelize');
 
 
 // FOR CREATING A USER ACCOUNT
 
 async function signUp(req, res) {
   try {
-    const { firstName, lastName, email, password, userRole ,projectMangerSecret } = req.body;
+    const { firstName, lastName, email, password, userRole ,projectMangerSecret,phoneNumber,openToRemoteWork,yearsOfExperience } = req.body;
     
   
     const isEmailCorrect = emailValidator(email);
@@ -49,8 +50,7 @@ async function signUp(req, res) {
     }
 
     if(userRole === 'project-manager'){
-      // if(projectMangerSecret !== process.env.PROJECT_MANAGER_SECRET){
-      if(projectMangerSecret !== 'test'){
+      if(projectMangerSecret !== process.env.PROJECT_MANAGER_SECRET){
          return res.status(400).json({message:'Invalid request Please see the Admin'})
       }
     }
@@ -71,7 +71,10 @@ async function signUp(req, res) {
       lastName,
       email,
       password,
-      userRole
+      userRole,
+      phoneNumber,
+      openToRemoteWork,
+      yearsOfExperience
     });
 
     const token = user.createJWT({
@@ -170,9 +173,23 @@ async function getUserInfo(req, res) {
   }
 }
 
+// FOR GETTING USER BY ROLE
+async function getUsersByRole (req,res){
+  const {userRole} = req.params
+
+  if(req.user.userRole !== 'project-manager'){
+     return res.status(401).json({message:'You are not allowed to access this resource'})
+  }
+
+  const users = await User.findAll({where:{userRole}})
+  return res.status(200).json({message:"request successful",users})
+
+}
+
 
 module.exports={
   signUp,
   signIn,
-  getUserInfo
+  getUserInfo,
+  getUsersByRole,
 }
