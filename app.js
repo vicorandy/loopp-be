@@ -16,7 +16,7 @@ const app = express();
 
 //cors set up
 app.use(cors({
-    origin: 'http://localhost:3000', // Replace with your frontend domain in production
+    origin: '*', // Replace with your frontend domain in production
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true, // Allow cookies or HTTP auth
