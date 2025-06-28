@@ -102,6 +102,6 @@ User.prototype.hashPassword = async (password) => {
   return hash;
 };
 
-db.sync().then(()=>console.log('user table created'))
+// db.sync().then(()=>console.log('user table created'))
 
 module.exports = User;
