@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors')
 const usersRouter = require('./Components/Users/userRoutes');
 const serviceRouter = require('./Components/Services/serviceRoutes')
+const projectsRouter = require('./Components/Projects/projectsRoutes')
 const notFoundError = require('./MiddelWare/notFound');
 
 // const { USERS_URI } = process.env;
@@ -33,6 +34,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/services',serviceRouter);
+app.use('/api/v1/projects',projectsRouter)
 app.use(notFoundError);
 
 module.exports = app;
