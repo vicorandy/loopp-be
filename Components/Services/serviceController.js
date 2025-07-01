@@ -1,6 +1,7 @@
 // controllers/serviceController.js
 const Service = require('./serviceModel')  // adjust path as needed
 const cloudinary = require('../../config/cloudinary');
+const { Op } = require('sequelize');
 
 // CREATE
 async function createService(req, res) {
@@ -89,6 +90,37 @@ async function createService(req, res) {
     return res.status(500).json({ 
       message: 'Internal server error while creating service' 
     });
+  }
+}
+
+// SEARCH
+async function searchService(req, res) {
+  const { searchTerm = '' } = req.query;
+  const trimmed = searchTerm.trim();
+  if (!trimmed) {
+    return res.status(400).json({ error: 'Search term is required' });
+  }
+
+  // Split on whitespace and remove empty strings
+  const terms = trimmed.split(/\s+/).filter(Boolean);
+
+  // Build an array of conditions: for each term, name OR category must match
+  const orConditions = terms.flatMap(term => [
+    { name:     { [Op.iLike]: `%${term}%` } },
+    { category: { [Op.iLike]: `%${term}%` } },
+  ]);
+
+  try {
+    const results = await Service.findAll({
+      where: {
+        [Op.or]: orConditions
+      }
+    });
+
+    res.status(200).json({ message: 'request successful', results });
+  } catch (err) {
+    console.error('Search error:', err);
+    res.status(500).json({ error: 'Something went wrong' });
   }
 }
 
@@ -201,10 +233,13 @@ async function deleteService(req, res) {
   }
 }
 
+
+
 module.exports = {
   createService,
   getAllServices,
   getServiceById,
   updateService,
   deleteService,
+  searchService,
 };
